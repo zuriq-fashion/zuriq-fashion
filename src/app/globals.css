@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   ZURIQ FASHION — Design System
+   Brand Palette & Typography Tokens
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand Palette */
+  --color-emerald:       #0A3622;   /* Deep Emerald    — Primary brand color     */
+  --color-emerald-light: #124D32;
+  --color-emerald-dark:  #062115;
+  --color-gold:          #D4AF37;   /* Rich Gold        — Luxury accent           */
+  --color-gold-light:    #E9D18A;
+  --color-gold-dark:     #A98724;
+  --color-ivory:         #FAF8F5;   /* Warm Ivory       — Main background         */
+  --color-ivory-dark:    #EDE8E1;
+  --color-charcoal:      #1A1A1A;   /* Charcoal Black   — Primary text            */
+  --color-charcoal-muted:#4A4A4A;
+
+  /* Semantic */
+  --background: var(--color-ivory);
+  --foreground: var(--color-charcoal);
+}
+
+/* ─── Tailwind v4 Theme Extension ─── */
+@theme inline {
+  --color-emerald:       var(--color-emerald);
+  --color-emerald-light: var(--color-emerald-light);
+  --color-emerald-dark:  var(--color-emerald-dark);
+  --color-gold:          var(--color-gold);
+  --color-gold-light:    var(--color-gold-light);
+  --color-gold-dark:     var(--color-gold-dark);
+  --color-ivory:         var(--color-ivory);
+  --color-ivory-dark:    var(--color-ivory-dark);
+  --color-charcoal:      var(--color-charcoal);
+
+  --font-cormorant: var(--font-cormorant);
+  --font-jakarta:   var(--font-jakarta);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/* ─── Base Styles ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-jakarta), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography Utilities ─── */
+.font-serif,
+.font-cormorant,
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  letter-spacing: 0.02em;
+}
+
+.font-sans,
+.font-jakarta {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+/* Brand name styling */
+.brand-name {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Gold shimmer gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #ECC86F 0%, #D4AF37 50%, #B89222 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Emerald shimmer background */
+.bg-emerald-gradient {
+  background: linear-gradient(145deg, #0D452B 0%, #0A3622 60%, #062316 100%);
+}
+
+/* Luxury card with subtle gold border */
+.luxury-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow: 0 4px 20px -2px rgba(10, 54, 34, 0.04), 0 2px 6px -1px rgba(212, 175, 55, 0.06);
+  border-radius: 0.875rem;
+}
+
+.luxury-card-dark {
+  background: #0A3622;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.35);
+  border-radius: 0.875rem;
+}
+
+/* Luxury gold divider */
+.luxury-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(212, 175, 55, 0.6),
+    transparent
+  );
+}
+
+/* Custom luxury scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1EEE9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B89222;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: #D4AF37;
+  color: #0A3622;
+}
