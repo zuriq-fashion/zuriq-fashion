@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cartContext";
+import { useCustomerAuth } from "@/lib/customerAuth";
 import { supabase } from "@/lib/supabase";
 import { Offer, Category } from "@/types/admin";
 import {
@@ -14,10 +15,13 @@ import {
   Shield,
   Truck,
   ChevronRight,
+  User,
+  LogOut,
 } from "lucide-react";
 
 export default function StoreHeader() {
   const { openCart, totalCount } = useCart();
+  const { customer, logoutCustomer } = useCustomerAuth();
   const [activeOffers, setActiveOffers] = useState<Offer[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,6 +67,12 @@ export default function StoreHeader() {
     activeOffers.length > 0
       ? activeOffers.map((o) => o.title).join("   ✦   ")
       : "✦ FESTIVE COUTURE 2026: Complimentary Express Delivery on orders above ₹2,999 ✦ Use code ZURIQ15 for 15% OFF ✦";
+
+  const customerDisplayName = customer
+    ? customer.name && customer.name !== "ZURIQ Client"
+      ? customer.name.split(" ")[0]
+      : "Account"
+    : null;
 
   return (
     <>
@@ -152,15 +162,41 @@ export default function StoreHeader() {
             </Link>
           </nav>
 
-          {/* Right: Actions (Cart + Admin) */}
-          <div className="flex items-center gap-3">
+          {/* Right: Actions (Customer Account + Admin + Cart) */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Customer Authentication Button */}
+            {customer ? (
+              <Link
+                href="/account"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-stone-200 hover:text-white bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-xs transition-colors"
+                title={`Logged in as ${customer.name || customer.phone}`}
+              >
+                <div className="w-5 h-5 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37] flex items-center justify-center text-[10px] text-[#D4AF37] font-bold">
+                  <User className="w-3 h-3 text-[#D4AF37]" />
+                </div>
+                <span className="text-[11px] font-semibold max-w-[80px] truncate">
+                  {customerDisplayName}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-stone-300 hover:text-white hover:bg-white/5 border border-[#D4AF37]/30 text-xs transition-colors"
+                title="Customer Sign In via OTP"
+              >
+                <User className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span className="text-[11px] font-semibold hidden sm:inline">Sign In</span>
+              </Link>
+            )}
+
+            {/* Admin Portal Button */}
             <Link
               href="/admin"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-stone-300 hover:text-white hover:bg-white/5 border border-[#D4AF37]/30 text-xs transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-white/5 border border-white/10 text-xs transition-colors"
               title="Admin Portal"
             >
-              <Shield className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span className="text-[11px] font-semibold">Admin</span>
+              <Shield className="w-3.5 h-3.5 text-stone-400" />
+              <span className="text-[10px] font-semibold">Admin</span>
             </Link>
 
             {/* Shopping Bag Button */}
@@ -209,6 +245,43 @@ export default function StoreHeader() {
                 </button>
               </div>
 
+              {/* Customer Account Indicator in Mobile Menu */}
+              <div className="p-3 rounded-xl bg-white/5 border border-[#D4AF37]/25 text-xs">
+                {customer ? (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-stone-400 block uppercase tracking-wider">
+                        Signed In
+                      </span>
+                      <span className="font-semibold text-stone-200">
+                        {customer.name || customer.phone}
+                      </span>
+                    </div>
+                    <Link
+                      href="/account"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-2.5 py-1 rounded bg-[#D4AF37] text-[#0A3622] font-semibold text-[11px]"
+                    >
+                      Profile
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-stone-300 font-medium">New to ZURIQ?</span>
+                      <p className="text-[10px] text-stone-400">Login with mobile OTP</p>
+                    </div>
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-3 py-1.5 rounded-lg bg-[#D4AF37] text-[#0A3622] font-semibold text-xs"
+                    >
+                      Sign In
+                    </Link>
+                  </div>
+                )}
+              </div>
+
               <div className="space-y-3 text-sm font-medium">
                 <Link
                   href="/"
@@ -242,10 +315,37 @@ export default function StoreHeader() {
                   </span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
+
+                {customer && (
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between py-2 text-stone-200 hover:text-[#D4AF37]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-[#D4AF37]" />
+                      My Orders & Account
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                )}
               </div>
             </div>
 
-            <div className="pt-6 border-t border-[#D4AF37]/20">
+            <div className="pt-6 border-t border-[#D4AF37]/20 space-y-2">
+              {customer && (
+                <button
+                  onClick={() => {
+                    logoutCustomer();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs font-semibold flex items-center justify-center gap-2"
+                >
+                  <LogOut className="w-4 h-4 text-red-400" />
+                  <span>Sign Out</span>
+                </button>
+              )}
+
               <Link
                 href="/admin"
                 onClick={() => setMobileMenuOpen(false)}

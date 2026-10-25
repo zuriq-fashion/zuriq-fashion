@@ -137,13 +137,19 @@ export default function StoreFooter() {
               </Link>
             </li>
             <li>
-              <span className="text-stone-400">Shipping & Delivery Policies</span>
+              <Link href="/terms-and-conditions#shipping-delivery" className="hover:text-[#D4AF37] transition-colors">
+                Shipping & Delivery Policies
+              </Link>
             </li>
             <li>
-              <span className="text-stone-400">Size & Fit Measurement Guide</span>
+              <Link href="/terms-and-conditions#exchange-returns" className="hover:text-[#D4AF37] transition-colors">
+                7-Day Size Exchange Guarantee
+              </Link>
             </li>
             <li>
-              <span className="text-stone-400">Couture Care & Dry Cleaning</span>
+              <Link href="/privacy-policy" className="hover:text-[#D4AF37] transition-colors">
+                Privacy & Data Safeguards
+              </Link>
             </li>
           </ul>
         </div>
@@ -177,9 +183,13 @@ export default function StoreFooter() {
           &copy; 2026 ZURIQ FASHION. All Rights Reserved. Crafted for Modern Indian Elegance.
         </div>
         <div className="flex items-center gap-4 text-stone-400">
-          <span>Privacy Policy</span>
+          <Link href="/privacy-policy" className="hover:text-[#D4AF37] transition-colors">
+            Privacy Policy
+          </Link>
           <span>&bull;</span>
-          <span>Terms of Service</span>
+          <Link href="/terms-and-conditions" className="hover:text-[#D4AF37] transition-colors">
+            Terms & Conditions
+          </Link>
           <span>&bull;</span>
           <span>Razorpay Verified</span>
         </div>

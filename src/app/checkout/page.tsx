@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cartContext";
+import { useCustomerAuth } from "@/lib/customerAuth";
 import { supabase } from "@/lib/supabase";
 import StoreHeader from "@/components/storefront/StoreHeader";
 import StoreFooter from "@/components/storefront/StoreFooter";
@@ -32,6 +33,8 @@ export default function CheckoutPage() {
     clearCart,
   } = useCart();
 
+  const { customer } = useCustomerAuth();
+
   // Form State
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,6 +43,24 @@ export default function CheckoutPage() {
   const [city, setCity] = useState("");
   const [stateName, setStateName] = useState("Delhi");
   const [pincode, setPincode] = useState("");
+
+  // Auto pre-fill coordinates from customer if authenticated
+  useEffect(() => {
+    if (customer) {
+      if (customer.name && customer.name !== "ZURIQ Client") {
+        setFullName((prev) => prev || customer.name || "");
+      }
+      if (customer.email && !customer.email.includes("client_")) {
+        setEmail((prev) => prev || customer.email || "");
+      }
+      if (customer.phone) {
+        setPhone((prev) => prev || customer.phone || "");
+      }
+      if (customer.address) {
+        setAddress((prev) => prev || customer.address || "");
+      }
+    }
+  }, [customer]);
 
   // Payment Selection
   const [paymentMethod, setPaymentMethod] = useState<"Razorpay" | "COD">("Razorpay");
@@ -294,6 +315,37 @@ export default function CheckoutPage() {
                   1. Delivery Destination & Contact
                 </h2>
               </div>
+
+              {/* Customer Authentication Banner */}
+              {customer ? (
+                <div className="p-3.5 rounded-xl bg-amber-50/70 border border-[#D4AF37]/40 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#8C6D1F]" />
+                    <span className="text-stone-700">
+                      Signed in as <strong>{customer.name || customer.phone}</strong> &bull; Order will be linked to your profile
+                    </span>
+                  </div>
+                  <Link
+                    href="/account"
+                    className="text-[#0A3622] font-semibold hover:underline text-[11px] whitespace-nowrap"
+                  >
+                    View Account &rarr;
+                  </Link>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-xl bg-[#0A3622]/5 border border-[#D4AF37]/30 flex items-center justify-between text-xs">
+                  <span className="text-stone-600">
+                    Have a ZURIQ Client profile? Sign in with mobile OTP for express checkout.
+                  </span>
+                  <Link
+                    href="/login?redirect=/checkout"
+                    className="text-[#0A3622] font-bold hover:underline flex items-center gap-1 text-[11px] whitespace-nowrap"
+                  >
+                    <span>Login via OTP</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  </Link>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
                 <div>

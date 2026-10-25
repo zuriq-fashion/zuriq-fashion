@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cartContext";
+import { CustomerAuthProvider } from "@/lib/customerAuth";
 import CartDrawer from "@/components/storefront/CartDrawer";
 
 // Editorial Serif — for headings & brand name
@@ -54,10 +55,12 @@ export default function RootLayout({
       className={`${cormorantGaramond.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-jakarta bg-ivory text-charcoal">
-        <CartProvider>
-          {children}
-          <CartDrawer />
-        </CartProvider>
+        <CustomerAuthProvider>
+          <CartProvider>
+            {children}
+            <CartDrawer />
+          </CartProvider>
+        </CustomerAuthProvider>
       </body>
     </html>
   );
